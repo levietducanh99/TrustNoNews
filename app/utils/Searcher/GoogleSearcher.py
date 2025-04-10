@@ -8,7 +8,7 @@
 #     nltk.download('punkt')
 
 from googlesearch import search
-from newspaper import Article
+
 
 query = "Messi dành được worldcuup 2022"
 domains = ["bongdaplus.vn", "vnexpress.vn","skysports.com"]  # Specify allowed domains
