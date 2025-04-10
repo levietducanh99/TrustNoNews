@@ -41,10 +41,10 @@ def save_to_file(data, url):
     try:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
-        print(f"\n✅ Đã lưu kết quả vào: {filepath}")
+        print(f"\n Đã lưu kết quả vào: {filepath}")
         return filepath
     except Exception as e:
-        print(f"\n❌ Không thể lưu kết quả: {e}")
+        print(f"\n Không thể lưu kết quả: {e}")
         return None
 
 def extract_publish_date(url):
