@@ -5,3 +5,4 @@ app = FastAPI()
 
 # Include the analyze router
 app.include_router(analyze_router)
+print("Heelooo")
