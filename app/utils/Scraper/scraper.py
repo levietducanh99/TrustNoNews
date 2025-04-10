@@ -1,7 +1,7 @@
 # utils/scraper.py
 import requests
 from newspaper import Article
-from readability import Document
+from readability.readability import Document
 from bs4 import BeautifulSoup
 import nltk
 
