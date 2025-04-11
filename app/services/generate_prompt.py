@@ -4,11 +4,22 @@ from app.prompt.sensitive_prompt import generate_sensitive_prompt
 from app.prompt.suspicious_link_prompt import generate_suspicious_link_prompt
 import ollama
 # phóng đại, giật gân
-def check_clickbait(title: str, content: str, similarity: float):
+def check_clickbait_1(title: str, content: str, similarity: float):
     if not title or not content:
         raise ValueError("Tiêu đề và nội dung bài viết không được để trống.")
     is_clickbait = similarity < 0.6
-    summary = content
+
+    # Use Ollama to summarize the content
+    try:
+        summary_response = ollama.chat(
+            model="mistral",
+            messages=[{"role": "user", "content": f"Tóm tắt nội dung: {content}"}],
+            stream=False
+        )
+        summary = summary_response.get("message", {}).get("content", "").strip()
+    except Exception as e:
+        raise RuntimeError(f"Lỗi khi gọi API Ollama để tóm tắt: {str(e)}")
+
     # Sinh prompt tiếng Việt
     prompt = generate_clickbait_prompt(
         title=title,
@@ -31,11 +42,7 @@ def check_clickbait(title: str, content: str, similarity: float):
                 explanation += chunk["message"]["content"]
 
         # Trả về kết quả dưới dạng dictionary
-        return {
-            "is_clickbait": is_clickbait,
-            "similarity_score": similarity,
-            "explanation": explanation.strip()
-        }
+        return explanation.strip()
     except Exception as e:
         # Xử lý lỗi nếu có trong khi gọi API
         raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
@@ -52,7 +59,7 @@ def check_fake_news(title: str, similar_titles: list, scores: list) -> dict:
     :raises RuntimeError: Nếu có lỗi khi gọi API Ollama
     """
     # Kiểm tra đầu vào
-    if not title or not similar_titles or not scores:
+    if not title or similar_titles or scores:
         raise ValueError("Tiêu đề, tiêu đề tương tự và điểm tương đồng không được để trống.")
     # Xác định tin có phải giả hay không dựa trên điểm tương đồng
     is_fake = all(score < 0.3 for score in scores)
@@ -131,7 +138,7 @@ def check_suspicious_link(original_url: str, redirected_url: str, is_suspicious:
     :raises RuntimeError: Nếu có lỗi khi gọi API Ollama
     """
     # Kiểm tra đầu vào
-    if not original_url or not redirected_url:
+    if not original_url or redirected_url:
         raise ValueError("Cả URL gốc và URL sau khi chuyển hướng đều không được để trống.")
 
     # Logic xác định xem URL có đáng ngờ hay không
