@@ -1,0 +1,98 @@
+/* Base font and layout */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header layout enhancement */
+header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+/* Logo image */
+.logo {
+    height: 42px;
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+/* Logo text */
+.logo-text {
+    font-size: 1.875rem; /* text-2xl */
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation link hover */
+nav a {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #cbd5e1;
+    text-decoration: underline;
+}
+
+/* Hero button */
+.hero-button {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.hero-button:hover {
+    background-color: #1e40af;
+}
+
+/* Feature cards */
+.feature-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Input focus */
+input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Loader */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Footer */
+footer {
+    font-size: 0.875rem;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: underline;
+    margin-left: 1rem;
+}

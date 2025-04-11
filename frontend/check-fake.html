@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Fake News - TrustNoNews</title>
+  <link rel="shortcut icon" href="assets/img/News.svg" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+<header class="bg-blue-600 text-white py-4">
+  <div class="container mx-auto px-4 flex justify-between items-center">
+    <a href="index.html" class="flex items-center space-x-2">
+      <img src="assets/img/News.svg" alt="TrustNoNews Logo" class="logo">
+      <span class="logo-text">TrustNoNews</span>
+    </a>
+    <nav>
+      <a href="pipeline.html" class="text-white hover:underline mx-2">Full Analysis</a>
+      <a href="check-link.html" class="text-white hover:underline mx-2">Check Link</a>
+      <a href="check-clickbait.html" class="text-white hover:underline mx-2">Check Clickbait</a>
+      <a href="check-sensitive.html" class="text-white hover:underline mx-2">Check Language</a>
+      <a href="check-fake.html" class="text-white hover:underline mx-2">Check Fake News</a>
+    </nav>
+  </div>
+</header>
+
+<section class="py-12 container mx-auto px-4">
+  <h2 class="text-3xl font-bold mb-6 text-center">Check Fake News</h2>
+  <form id="fake-form" class="max-w-lg mx-auto">
+    <div class="mb-4">
+      <label for="url" class="block text-lg mb-2">Enter URL</label>
+      <input type="url" id="url" class="w-full p-3 border rounded-lg" placeholder="https://example.com" required aria-required="true">
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Check News</button>
+  </form>
+
+  <div id="loading" class="hidden text-center mt-6">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 mx-auto"></div>
+  </div>
+
+  <div id="result" class="hidden mt-6 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h3 class="text-xl font-semibold mb-4">Result</h3>
+    <p><strong>Fake News:</strong> <span id="is-fake"></span></p>
+    <p><strong>Input Title:</strong> <span id="input-title"></span></p>
+    <p><strong>Similar Titles:</strong></p>
+    <ul id="similar-titles" class="list-disc pl-6"></ul>
+    <p><strong>Explanation:</strong> <span id="explanation"></span></p>
+  </div>
+
+  <div id="error" class="hidden mt-6 max-w-lg mx-auto bg-red-100 p-6 rounded-lg text-red-700"></div>
+</section>
+
+<script src="assets/js/common.js"></script>
+<script src="assets/js/check-fake.js"></script>
+</body>
+</html>
