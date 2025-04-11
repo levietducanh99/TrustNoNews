@@ -6,6 +6,7 @@ import ollama
 # phóng đại, giật gân
 def check_clickbait(title: str, content: str, similarity: float):
     if not title or not content:
+
         raise ValueError("Tiêu đề và nội dung bài viết không được để trống.")
     is_clickbait = similarity < 0.6
     summary = content
@@ -88,12 +89,13 @@ def check_fake_news(title: str, similar_titles: list, scores: list) -> dict:
         # Xử lý lỗi khi gọi API
         raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
 # ngôn ngữ nhạy cảm
-def check_sensitive_language(content: str, label: str, is_sensitive: bool) -> dict:
+def check_sensitive_language(content: str, label: str, is_sensitive: bool, criteria: list) -> dict:
     # B3: Tạo prompt tiếng Việt
     prompt = generate_sensitive_prompt(
         label=label,
         text=content,
-        is_sensitive=is_sensitive
+        is_sensitive=is_sensitive,
+        criteria=criteria
     )
 
     try:
@@ -113,6 +115,7 @@ def check_sensitive_language(content: str, label: str, is_sensitive: bool) -> di
         return {
             "is_sensitive": is_sensitive,
             "label": label,
+            "criteria": criteria,
             "explanation": explanation.strip()
         }
 
