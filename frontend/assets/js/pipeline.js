@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
         hideError(error);
 
         try {
-            const data = await makeApiCall('/analyze', url);
-            const results = data.results;
+            const data = await makeApiCall('/analyze', url); // Use analyze API
+            const results = data;
 
             // Summary
-            document.getElementById('summary-url').textContent = data.url;
+            document.getElementById('summary-url').textContent = results.url;
             let issues = [];
             if (results.link_check.is_suspicious) issues.push('Suspicious Link');
             if (results.clickbait.is_clickbait) issues.push('Clickbait');

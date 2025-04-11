@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideError(error);
 
         try {
-            const data = await makeApiCall('/check-sensitive-language', url);
+            const data = await makeApiCall('/check-hatespeech', url);
 
             document.getElementById('is-sensitive').textContent = data.detected ? 'Yes' : 'No';
             document.getElementById('is-sensitive').classList.add(data.detected ? 'text-red-600' : 'text-green-600');

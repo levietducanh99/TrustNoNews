@@ -1,5 +1,5 @@
 // Shared utility functions
-const API_BASE_URL = 'http://localhost:8000/v1';
+const API_BASE_URL = 'http://localhost:8000';
 
 function showLoading(loadingElement) {
     loadingElement.classList.remove('hidden');
@@ -31,11 +31,11 @@ async function makeApiCall(endpoint, url) {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ url }) // Ensure the payload matches the API's expected format
         });
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.message || 'API error');
+            throw new Error(data.detail || 'API error'); // Adjust error handling for FastAPI responses
         }
         return data;
     } catch (err) {
