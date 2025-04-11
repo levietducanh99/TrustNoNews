@@ -1,0 +1,16 @@
+shop
+store
+click
+redirect
+affiliate
+product
+promo
+deal
+discount
+login
+verify
+win
+bonus
+reward
+track
+offer
