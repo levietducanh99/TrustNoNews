@@ -6,6 +6,7 @@ from app.api.routes.check_clickbait_api import router as clickbait_router
 app = FastAPI()
 
 # Include the analyze router
+
 app.include_router(analyze_router)
 
 # Include the similarity router
@@ -14,3 +15,4 @@ app.include_router(clickbait_router)
 
 
 print("helloo")
+
