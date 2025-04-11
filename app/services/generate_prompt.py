@@ -95,12 +95,13 @@ def check_fake_news(title: str, similar_titles: list, scores: list) -> dict:
         # Xử lý lỗi khi gọi API
         raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
 # ngôn ngữ nhạy cảm
-def check_sensitive_language(content: str, label: str, is_sensitive: bool) -> dict:
+def check_sensitive_language(content: str, label: str, is_sensitive: bool, criteria: list) -> dict:
     # B3: Tạo prompt tiếng Việt
     prompt = generate_sensitive_prompt(
         label=label,
         text=content,
-        is_sensitive=is_sensitive
+        is_sensitive=is_sensitive,
+        criteria=criteria
     )
 
     try:
@@ -172,3 +173,4 @@ def check_suspicious_link(original_url: str, redirected_url: str, is_suspicious:
     except Exception as e:
         # Xử lý lỗi khi gọi API
         raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
+

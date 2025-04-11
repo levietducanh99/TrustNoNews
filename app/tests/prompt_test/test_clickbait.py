@@ -1,4 +1,4 @@
-from app.services.clickbait_detector import check_clickbait
+from app.services.generate_prompt import check_clickbait
 
 def test_clickbait_explain():
     title = "Clickbait Research Will Make You Lose Some Faith In Humanity"

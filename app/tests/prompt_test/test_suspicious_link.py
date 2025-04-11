@@ -1,4 +1,4 @@
-from app.services.clickbait_detector import check_suspicious_link
+from app.services.generate_prompt import check_suspicious_link
 
 
 def test_sensitive_language():
