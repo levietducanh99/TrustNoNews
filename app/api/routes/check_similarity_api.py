@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.services.show_list_similarity import show_list_similarity
 from app.utils.Scraper.scraper import scrape
+from app.services.generate_prompt import generate_fake_news_prompt
+import ollama
 
 router = APIRouter()
 
@@ -35,11 +37,19 @@ async def check_fake_news(request: FakeNewsRequest):
 
         # Determine if the news is fake based on similarity scores
         is_fake = all(score < 0.3 for score in similarity_scores)  # Example threshold
-        explanation = (
-            "No credible sources support the headline. Low similarity detected."
-            if is_fake
-            else "Similar credible sources found."
+
+        # Generate prompt and call Ollama for explanation
+        prompt = generate_fake_news_prompt(
+            title=input_title,
+            similar_titles=similar_titles,
+            scores=similarity_scores,
+            is_fake=is_fake
         )
+        response = ollama.chat(
+            model="mistral",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        explanation = response.get("message", {}).get("content", "").strip()
 
         # Prepare the response
         response = {
@@ -52,3 +62,4 @@ async def check_fake_news(request: FakeNewsRequest):
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing request: {str(e)}")
+

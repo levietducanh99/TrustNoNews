@@ -1,6 +1,7 @@
 from app.utils.Similarity.VectorSimilarity import get_similarity
-from app.utils.Summary.summary_t5 import summarize_text
-from app.prompts.clickbait_prompt import generate_clickbait_explanation
+from app.utils.Summary.summary_mistral import summarize_text
+from app.prompt.clickbait_prompt import generate_clickbait_prompt
+import ollama
 
 def check_clickbait(title: str, content: str):
     # Summarize the content
@@ -17,12 +18,19 @@ def check_clickbait(title: str, content: str):
     is_clickbait = similarity < 0.6
 
     # Generate an explanation for the result
-    explanation = generate_clickbait_explanation(
+    prompt = generate_clickbait_prompt(
         title=title,
         content_summary=summary,
         similarity_score=similarity,
         is_clickbait=is_clickbait
     )
+
+    response = ollama.chat(
+        model="mistral",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    explanation = response.get("message", {}).get("content", "").strip()
 
     return {
         "is_clickbait": bool(is_clickbait),  # Convert to standard Python bool
