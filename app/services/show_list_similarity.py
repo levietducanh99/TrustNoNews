@@ -40,15 +40,7 @@ def process_url(url):
         if "error" in result:
             raise ValueError(f"Không thể trích xuất dữ liệu từ URL: {result['error']}")
         title = result.get('title', '')
-        summary = result.get('summary', '')
-        if not title.strip() and not summary.strip():
-            raise ValueError("Không trích xuất được title hoặc summary từ URL")
-        if title.strip() and summary.strip():
-            query = f"{title}. {summary}"
-        elif title.strip():
-            query = title
-        else:
-            query = summary
+        query = title
         return query
     except Exception as e:
         raise RuntimeError(f"Lỗi khi xử lý URL {url}: {str(e)}")
