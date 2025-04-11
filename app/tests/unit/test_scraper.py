@@ -2,7 +2,7 @@ from app.utils.Scraper.scraper import scrape
 
 def main():
     # URL to test the scrape function
-    url = "https://bongdaplus.vn/serie-a/ky-tich-tuoi-70-cua-nguoi-binh-thuong-ranieri-4646132504.html"
+    url = "https://www.dailymail.co.uk/tvshowbiz/article-14588373/White-Lotus-friendships-Aimee-Lou-Wood-Walton-Goggins-feud.html"
 
     # Call the scrape function
     result = scrape(url)
