@@ -1,49 +1,52 @@
-# import nltk
-#
-# # Ensure the 'punkt' resource is downloaded
-# try:
-#     nltk.data.find('tokenizers/punkt')
-# except LookupError:
-#     print("Downloading NLTK 'punkt' resource...")
-#     nltk.download('punkt')
+# from googlesearch import search #remove this
+from duckduckgo_search import DDGS
+# from newspaper import Article  # Uncomment if using article parsing
 
-from googlesearch import search
+def search_articles(title):
+    """
+    Search for articles based on the given title and return a list of dictionaries
+    containing the article title and summary.
+    """
+    domains = ["e.vnexpress.net", "skysports.com"]  # Specify allowed domains
 
+    # Append domain filters to the query
+    domain_filters = " OR ".join([f"site:{domain}" for domain in domains])
+    query = f"{title} ({domain_filters})"
 
-query = "Messi dành được worldcuup 2022"
-domains = ["bongdaplus.vn", "vnexpress.vn","skysports.com"]  # Specify allowed domains
+    with DDGS() as ddgs:
+        results = ddgs.text(query, max_results=10)
 
-# Append domain filters to the query
-domain_filters = " OR ".join([f"site:{domain}" for domain in domains])
-query = f"{query} ({domain_filters})"
+    articles = []
 
-print("Search results for:", query)
-print("-" * 50)
+    for result in results:
+        article_title = result['title']
+        article_url = result['href']
+        # Simulated summary for demonstration purposes
+        article_summary = result['body'] if 'body' in result else "No description available"
 
-# Using googlesearch to fetch results
-results = search(query, num_results=100, advanced=True)
+        # Uncomment the following block if you want to fetch and parse the article content
+        # try:
+        #     article = Article(article_url)
+        #     article.download()
+        #     article.parse()
+        #     article.nlp()
+        #     article_summary = article.summary
+        # except Exception as e:
+        #     article_summary = f"Error fetching or parsing article: {e}"
 
+        articles.append({
+            "title": article_title,
+            "summary": article_summary
+        })
 
-for result in results:
-    title = result.title
-    url = result.url
-    description = result.description if result.description else "No description available"
+    return articles
 
-    print(f"Title: {title}")
-    print(f"URL: {url}")
-    print(f"Description: {description}")
+def main():
+    # Example usage for testing
+    test_title = "Tổng Bí thư, Chủ tịch Trung Quốc Tập Cận Bình sắp thăm Việt Nam"
+    print(f"Searching for articles with title: '{test_title}'")
+    results = search_articles(test_title)
+    print(results)
 
-    # try:
-    #     article = Article(url)
-    #     article.download()
-    #     article.parse()
-    #     article.nlp()
-    #
-    #     content = article.text
-    #     summary = article.summary
-    #
-    # except Exception as e:
-    #     print(f"Error fetching or parsing article: {e}")
-
-    print("-" * 50)
-
+if __name__ == "__main__":
+    main()
