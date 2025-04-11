@@ -2,14 +2,11 @@ from app.services.clickbait_detector import check_sensitive_language
 
 
 def test_sensitive_language():
-    content = "Bọn đó toàn là một lũ dốt nát, không làm được trò trống gì!"
+    content = "Those people are all a bunch of fools, incapable of doing anything useful!"
     is_sensitive = True
     label = "Toxic language"
 
     result = check_sensitive_language(content, label, is_sensitive)
 
-    # In ra kết quả
+    # Print the result
     print(result)
-
-
-
