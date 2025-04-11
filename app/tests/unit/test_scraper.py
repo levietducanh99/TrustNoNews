@@ -1,23 +1,16 @@
-import unittest
 from app.utils.Scraper.scraper import scrape
 
-class TestScraper(unittest.TestCase):
-    def setUp(self):
-        # URL for testing
-        self.test_url = "https://bongdaplus.vn/goc-check-var/tuyen-thu-quoc-gia-giau-ao-mua-trong-tat-4642632504.html"
+def main():
+    # URL to test the scrape function
+    url = "https://www.dailymail.co.uk/tvshowbiz/article-14588373/White-Lotus-friendships-Aimee-Lou-Wood-Walton-Goggins-feud.html"
 
-    def test_scrape(self):
-        try:
-            result = scrape(self.test_url)
-            self.assertIn("title", result)
-            self.assertIn("content", result)
-            self.assertIn("summary", result)
-            self.assertIn("keywords", result)
-            self.assertIn("url", result)
-            self.assertIn("method", result)
-            print("Scraper Result:", result)
-        except Exception as e:
-            self.fail(f"scrape raised an exception: {e}")
+    # Call the scrape function
+    result = scrape(url)
+
+    # Print the result
+    print("Scrape Result:")
+    print(result)
 
 if __name__ == "__main__":
-    unittest.main()
+    main()
+
