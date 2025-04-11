@@ -52,8 +52,7 @@ def vectorize_texts(texts):
     with torch.no_grad():
         embeddings = model(**inputs).last_hidden_state[:, 0, :]  # Lấy CLS token
     embeddings = embeddings.cpu().numpy()  # Chuyển về CPU và numpy
-    if embeddings.shape[1] > 384:  # Giảm chiều nếu cần
-        embeddings = embeddings[:, :384]  # Cắt xuống 384 chiều
+    embeddings = embeddings[:, :384]  # Ensure 384 dimensions
     return embeddings
 
 def calculate_cosine_similarity(vec1, vec2):
@@ -69,7 +68,8 @@ def create_faiss_index(vectors, n_dimensions=384):
     return index
 
 def get_similarity(text1: str, text2: str) -> float:
-    vec1 = vectorize_texts(text1)
-    vec2 = vectorize_texts(text2)
+    vec1 = vectorize_texts([text1])[0]  # Ensure single vector
+    vec2 = vectorize_texts([text2])[0]  # Ensure single vector
     similarity = cosine_similarity([vec1], [vec2])[0][0]
     return similarity  # Trả về giá trị float
+
