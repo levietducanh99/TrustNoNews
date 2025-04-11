@@ -5,6 +5,16 @@ from app.api.routes.check_clickbait_api import router as clickbait_router
 from app.api.routes.hatespeech_api import router as hatespeech_router
 
 app = FastAPI()
+
+# Configure CORS to allow requests from the frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
 # Include the analyze router
 app.include_router(analyze_router)
 
