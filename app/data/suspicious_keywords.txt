@@ -1,7 +1,6 @@
 shop
 store
 click
-ad
 redirect
 affiliate
 product

@@ -1,25 +1,28 @@
-# prompts/clickbait_prompt.py
-
-def generate_clickbait_explanation(title: str, content_summary: str, similarity_score: float, is_clickbait: bool) -> str:
+def generate_clickbait_prompt(title: str, content_summary: str, similarity_score: float, is_clickbait: bool) -> str:
     if is_clickbait:
         prompt = (
-            "You are a clickbait explanation assistant. Given a news title, the summary of the article, and their similarity score, "
-            "explain whether the title is clickbait or not and why.\n\n"
+            "Imagine you are an assistant explaining clickbait. Please review the title and the article summary below. "
+            "Based on the similarity between the title and the content, can you determine whether the title is clickbait and why?\n\n"
             f"Title: {title}\n"
             f"Article Summary: {content_summary}\n"
             f"Similarity Score: {similarity_score:.2f}\n"
-            f"Clickbait: True\n\n"
-            "Clickbait: The title exaggerates key points not mentioned in content."
+            "Conclusion: This is clickbait\n"
+            "Explanation: This title might exaggerate or mislead about the article's content, not accurately reflecting the truth."
+            "Please provide a brief explanation (about 2-4 sentences) in simple, soft language as to why this content is labeled as such. "
+            "The explanation should be aimed at a general audience (no technical jargon), and you may use illustrative examples or relatable terms. "
+            "Respond as if you are having a conversation with the user."
         )
     else:
         prompt = (
-            "You are a clickbait explanation assistant. Given a news title, the summary of the article, and their similarity score, "
-            "explain whether the title is clickbait or not and why.\n\n"
+            "Imagine you are an assistant explaining clickbait. Please review the title and the article summary below. "
+            "Based on the similarity between the title and the content, can you determine whether the title is clickbait and why?\n\n"
             f"Title: {title}\n"
             f"Article Summary: {content_summary}\n"
             f"Similarity Score: {similarity_score:.2f}\n"
-            f"Clickbait: False\n\n"
-            "Not clickbait: The title aligns well with the content."
+            "Conclusion: This is not clickbait\n"
+            "Explanation: The title aligns with the article's content, not misleading or exaggerated."
+            "Please provide a brief explanation (about 2-4 sentences) in simple, soft language as to why this content is labeled as such. "
+            "The explanation should be aimed at a general audience (no technical jargon), and you may use illustrative examples or relatable terms. "
+            "Respond as if you are having a conversation with the user."
         )
-
     return prompt
