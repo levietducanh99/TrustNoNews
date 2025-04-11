@@ -1,14 +1,8 @@
-from app.utils.Scraper.scraper import scrape
 from app.utils.Similarity.VectorSimilarity import get_similarity
 from app.utils.Summary.summary_t5 import summarize_text
 from app.prompts.clickbait_prompt import generate_clickbait_explanation
 
-def check_clickbait(url: str):
-    # Scrape the webpage to extract title and content
-    scrape_result = scrape(url)
-    title = scrape_result.get("title", "")
-    content = scrape_result.get("content", "")
-
+def check_clickbait(title: str, content: str):
     # Summarize the content
     summary = summarize_text(content)
 
@@ -31,8 +25,8 @@ def check_clickbait(url: str):
     )
 
     return {
-        "is_clickbait": is_clickbait,
-        "similarity_score": similarity,
+        "is_clickbait": bool(is_clickbait),  # Convert to standard Python bool
+        "similarity_score": float(similarity),  # Convert to standard Python float
         "explanation": explanation,
         "summary": summary,
         "title": title
