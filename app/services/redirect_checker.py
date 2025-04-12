@@ -147,6 +147,25 @@ def extract_url_from_html(html_content, base_url):
             extracted_urls.append(('javascript', urljoin(base_url, url)))
     return extracted_urls
 
+def deduplicate_warnings(warnings):
+    """Removes duplicate warning messages."""
+    if not warnings:
+        return []
+    
+    unique_warnings = []
+    seen = set()
+    
+    for warning in warnings:
+        # Create a simplified version for deduplication
+        simple_warning = re.sub(r'(URL|ĐÁNG NGỜ|NGUY HIỂM):', '', warning).strip()
+        simple_warning = re.sub(r'\bshop\b', 'shop_keyword', simple_warning)
+        
+        if simple_warning not in seen:
+            seen.add(simple_warning)
+            unique_warnings.append(warning)
+            
+    return unique_warnings
+
 def check_redirect_and_validate(url, timeout=10, max_redirects=5):
     redirect_chain = []
     warning_messages = []
@@ -249,7 +268,9 @@ def check_redirect_and_validate(url, timeout=10, max_redirects=5):
             warning_messages.append(f"Quá nhiều chuyển hướng (>{max_redirects})")
 
         if warning_messages:
-            return final_url, " | ".join(warning_messages), redirect_chain
+            # Deduplicate warning messages before joining
+            unique_warnings = deduplicate_warnings(warning_messages)
+            return final_url, " | ".join(unique_warnings), redirect_chain
 
         return final_url, None, redirect_chain
 
