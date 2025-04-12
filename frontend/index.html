@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrustNoNews - Verify News Authenticity</title>
     <link rel="shortcut icon" href="assets/img/News.svg" type="image/x-icon">
+    <!-- Add Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -27,7 +29,7 @@
 
 <section class="py-12 text-center bg-white">
     <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold mb-4">Don’t Fall for Fake News</h2>
+        <h2 class="what-we-check-heading">Don’t Fall for Fake News</h2>
         <p class="text-lg mb-6 max-w-2xl mx-auto">
             Analyze URLs for suspicious links, clickbait, toxic language, and misinformation with TrustNoNews.
         </p>
@@ -42,31 +44,34 @@
 
 <section class="py-12 bg-gray-100">
     <div class="container mx-auto px-4">
-        <h3 class="text-2xl font-bold text-center mb-8">What We Check</h3>
+        <h3 class="what-we-check-heading">What We Check</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="result-card">
+                <i class="fas fa-link w-30 h-30 text-blue-600 mb-4"></i>
                 <h4 class="text-xl font-semibold mb-2">Suspicious Links</h4>
                 <p class="text-gray-600">Detect redirects to untrustworthy domains.</p>
-                <a href="check-link.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
+                <a href="check-link.html" class="try-button mt-4">Try it</a>
             </div>
             <div class="result-card">
+                <i class="fas fa-exclamation-circle w-30 h-30 text-yellow-500 mb-4"></i>
                 <h4 class="text-xl font-semibold mb-2">Clickbait Titles</h4>
                 <p class="text-gray-600">Identify exaggerated or misleading headlines.</p>
-                <a href="check-clickbait.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
+                <a href="check-clickbait.html" class="try-button mt-4">Try it</a>
             </div>
             <div class="result-card">
+                <i class="fas fa-language w-30 h-30 text-red-600 mb-4"></i>
                 <h4 class="text-xl font-semibold mb-2">Sensitive Language</h4>
                 <p class="text-gray-600">Flag toxic or harmful content.</p>
-                <a href="check-sensitive.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
+                <a href="check-sensitive.html" class="try-button mt-4">Try it</a>
             </div>
             <div class="result-card">
+                <i class="fas fa-newspaper w-30 h-30 text-green-600 mb-4"></i>
                 <h4 class="text-xl font-semibold mb-2">Fake News</h4>
                 <p class="text-gray-600">Compare with trusted sources.</p>
-                <a href="check-fake.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
+                <a href="check-fake.html" class="try-button mt-4">Try it</a>
             </div>
         </div>
     </div>
 </section>
-
 </body>
 </html>

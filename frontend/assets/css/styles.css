@@ -5,6 +5,29 @@ body {
     color: #1f2937;
 }
 
+/* Add styles for icons */
+.result-card img {
+    display: block;
+}
+
+/* Improve "Try it" button styling */
+.try-button {
+    display: inline-block;
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.try-button:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 /* Logo styling */
 .logo {
     width: 2rem;
@@ -329,3 +352,50 @@ table td:last-child {
     width: 100%;
     overflow-x: auto;
 }
+/* Style for "What We Check" heading */
+.what-we-check-heading {
+    font-size: 2.5rem; /* Increase font size */
+    font-weight: 700; /* Make it bold */
+    text-align: center; /* Center the text */
+    background: linear-gradient(90deg, #3b82f6, #9333ea); /* Gradient background */
+    -webkit-background-clip: text; /* Clip the gradient to the text */
+    -webkit-text-fill-color: transparent; /* Make the background visible */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    margin-bottom: 2rem; /* Add spacing below the heading */
+}
+
+.gradient-title-blue {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(59, 130, 246, 0.4);
+}
+
+.gradient-title-green {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(16, 185, 129, 0.4);
+}
+
+.gradient-title-yellow {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(245, 158, 11, 0.4);
+}
+
+.gradient-title-red {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(239, 68, 68, 0.4);
+}
+
+.gradient-title-purple {
+    background: linear-gradient(90deg, #9333ea, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(147, 51, 234, 0.4);
+}
+
