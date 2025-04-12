@@ -64,13 +64,27 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('fake-is').textContent = results.fake_news.is_fake ? 'Yes' : 'No';
             document.getElementById('fake-is').classList.add(results.fake_news.is_fake ? 'text-red-600' : 'text-green-600');
             document.getElementById('fake-title').textContent = results.fake_news.input_title || 'N/A';
+            
+            // Update similar titles display to match check-fake.html
             const similarTitles = document.getElementById('fake-similar');
             similarTitles.innerHTML = '';
             results.fake_news.similar_titles?.forEach((title, i) => {
                 const li = document.createElement('li');
-                li.textContent = `${title} (Score: ${results.fake_news.similarity_scores[i]?.toFixed(2) || 'N/A'})`;
+                const score = results.fake_news.similarity_scores[i]?.toFixed(2) || 'N/A';
+                const articleUrl = results.fake_news.urls?.[i] || '#';
+                
+                li.innerHTML = `
+                    <div class="mb-2">
+                        <div>${title} (Score: ${score})</div>
+                        <a href="${articleUrl}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                            ${articleUrl}
+                        </a>
+                    </div>
+                `;
                 similarTitles.appendChild(li);
             });
+            
+            // Update explanation to be in a styled div instead of a span
             document.getElementById('fake-explanation').textContent = results.fake_news.explanation || 'N/A';
 
             hideLoading(loading);

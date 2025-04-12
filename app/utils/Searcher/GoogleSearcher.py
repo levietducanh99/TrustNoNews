@@ -36,7 +36,8 @@ def search_articles(title):
 
         articles.append({
             "title": article_title,
-            "summary": article_summary
+            "summary": article_summary,
+            "url": article_url,
         })
 
     return articles

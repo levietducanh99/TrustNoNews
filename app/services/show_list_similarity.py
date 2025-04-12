@@ -28,6 +28,7 @@ def search_articles(query, articles, index, k=15):
         results.append({
             'title': articles.iloc[idx]['title'],
             'summary': articles.iloc[idx]['summary'],
+            'url': articles.iloc[idx]['url'],  # Add URL to the results
             'similarity': similarity
         })
     return results
@@ -63,7 +64,8 @@ def show_list_similarity(url):
 
     titles = articles['title'].tolist()
     summaries = articles['summary'].tolist()
-
+    list_url = articles['url'].tolist()
+    
     title_vecs = vectorize_texts(titles)  # Shape: (N, 384)
     summary_vecs = vectorize_texts(summaries)  # Shape: (N, 384)
     combined_vecs = combine_vectors(title_vecs, summary_vecs)  # Shape: (N, 384)
@@ -81,6 +83,7 @@ def show_list_similarity(url):
         for result in results:
             print(f"\ntitle: {result['title']}")
             print(f"summary: {result['summary']}")
+            print(f"url: {result['url']}")  # Print URL in the console output
             print(f"similarity: {result['similarity']:.4f}")
 
         end_time = time.time()
@@ -92,9 +95,11 @@ def show_list_similarity(url):
 
     return results
 
-
+#
 # def main():
-#     url = "https://vnexpress.net/tong-bi-thu-chu-tich-trung-quoc-tap-can-binh-sap-tham-viet-nam-4872223.html"
-#     data = create_dummy_data(url)
+#     url = "https://e.vnexpress.net/news/news/crime/2-men-sentenced-to-death-for-trafficking-30-kg-of-drugs-from-germany-4872766.html"    # data = create_dummy_data(url)
+#     # print(data)
+#     show_list_similarity(url)
+#
 # if __name__ == "__main__":
 #     main()
