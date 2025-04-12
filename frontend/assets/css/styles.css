@@ -24,6 +24,8 @@ body {
     padding: 1.5rem;
     margin-bottom: 1rem;
     border: 1px solid #e5e7eb;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Status indicators */
@@ -85,6 +87,7 @@ body {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .accordion {
@@ -92,7 +95,8 @@ body {
     min-width: 200px;
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to visible */
+    margin-bottom: 1rem;
 }
 
 .accordion-header {
@@ -117,14 +121,15 @@ body {
 .accordion-content {
     padding: 0 1.5rem;
     background: white;
-    transition: max-height 0.3s ease, padding 0.3s ease;
+    transition: all 0.3s ease;
     max-height: 0;
     overflow: hidden;
 }
 
 .accordion-content[aria-expanded="true"] {
-    max-height: 500px; /* Reduced for compact display */
+    max-height: 3000px; /* Increased for full content display */
     padding: 1.5rem;
+    overflow: visible; /* Allow content to be fully visible */
 }
 
 /* Tab styles for pipeline */
@@ -170,6 +175,8 @@ body {
     }
     .result-card {
         padding: 1rem;
+        max-width: 100%;
+        overflow-x: hidden;
     }
     .trust-badge {
         flex-direction: row;
@@ -252,4 +259,73 @@ input[type="url"]:focus {
 /* Button hover */
 button {
     transition: background-color 0.2s ease-in-out;
+}
+
+/* Table styles for criteria analysis */
+.overflow-x-auto {
+    overflow-x: auto;
+    max-width: 100%;
+    margin-bottom: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0 auto;
+}
+
+table th,
+table td {
+    word-break: normal;
+    vertical-align: top;
+    padding: 0.5rem 0.75rem;
+}
+
+table th {
+    width: auto;
+}
+
+table th:first-child, 
+table td:first-child {
+    width: 20%;
+}
+
+table th:nth-child(2), 
+table td:nth-child(2) {
+    width: 60%;
+}
+
+table th:last-child, 
+table td:last-child {
+    width: 20%;
+}
+
+/* Responsive table adjustments */
+@media (max-width: 768px) {
+    table {
+        table-layout: auto;
+        font-size: 0.9rem;
+    }
+    
+    table th:first-child, 
+    table td:first-child,
+    table th:nth-child(2), 
+    table td:nth-child(2),
+    table th:last-child, 
+    table td:last-child {
+        width: auto;
+    }
+}
+
+/* Additional styles for wider result display */
+#result {
+    max-width: 90% !important;
+    margin: 1.5rem auto;
+}
+
+/* Ensure criteria table is fully visible */
+#sensitive-criteria {
+    width: 100%;
+    overflow-x: auto;
 }

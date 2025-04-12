@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>Articles</h3>
                 <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
-              <div id="fake-articles" class="accordion-content" aria-expanded="false">
+              <div id="fake-articles" class="accordion-content scrollable-content" aria-expanded="false">
                 <div class="space-y-2">
                   <p><strong>Title:</strong> <span class="text-gray-800">${
                 data.input_title || 'N/A'
@@ -55,13 +55,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? data.similar_titles
                         .map(
                             (title, i) => `
-                            <li class="flex justify-between">
-                              <span>${title}</span>
-                              <span class="text-gray-600">${
-                                data.similarity_scores[i]
-                                    ? `${(data.similarity_scores[i] * 100).toFixed(0)}% match`
-                                    : 'N/A'
-                            }</span>
+                            <li class="flex flex-col mb-2">
+                              <div class="flex justify-between">
+                                <a href="${data.urls[i]}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
+                                  ${title}
+                                </a>
+                                <span class="text-gray-600">${
+                                  data.similarity_scores[i]
+                                      ? `${(data.similarity_scores[i] * 100).toFixed(0)}% match`
+                                      : 'N/A'
+                                }</span>
+                              </div>
+                              <span class="text-xs text-gray-500 truncate">${data.urls[i] || ''}</span>
                             </li>
                           `
                         )
@@ -77,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>Explanation</h3>
                 <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
-              <div id="fake-explanation" class="accordion-content explanation" aria-expanded="false">
+              <div id="fake-explanation" class="accordion-content scrollable-content" aria-expanded="false">
                 <p>${data.explanation || 'No additional information available.'}</p>
               </div>
             </div>

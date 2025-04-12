@@ -7,6 +7,37 @@
   <link rel="shortcut icon" href="assets/img/News.svg" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    .accordion-content {
+      max-height: 300px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #718096 #e2e8f0;
+    }
+    
+    .scrollable-content {
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    
+    .accordion-content::-webkit-scrollbar,
+    .scrollable-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .accordion-content::-webkit-scrollbar-track,
+    .scrollable-content::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 4px;
+    }
+    
+    .accordion-content::-webkit-scrollbar-thumb,
+    .scrollable-content::-webkit-scrollbar-thumb {
+      background-color: #718096;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 font-sans">
 <header class="bg-blue-600 text-white py-4">

@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>Details</h3>
                 <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
-              <div id="link-details" class="accordion-content" aria-expanded="false">
+              <div id="link-details" class="accordion-content scrollable-content" aria-expanded="false">
                 <div class="space-y-2">
                   <p><strong>Redirected URL:</strong> <span class="text-gray-800">${
                 data.redirected_url || 'N/A'
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>Explanation</h3>
                 <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
-              <div id="link-explanation" class="accordion-content explanation" aria-expanded="false">
+              <div id="link-explanation" class="accordion-content scrollable-content explanation" aria-expanded="false">
                 <p>${data.explanation?.trim() || 'No additional information available.'}</p>
               </div>
             </div>

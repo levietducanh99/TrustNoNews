@@ -115,6 +115,7 @@ async def check_hatespeech(request: HateSpeechRequest):
 
         result = analyze_hatespeech(content, request.threshold)
         result["title"] = scrape_result.get("title", "No title available")
+        result["criteria"] = result.get("criteria", [])  # Ensure criteria is included in the response
         return result
     except HTTPException as e:
         raise e
