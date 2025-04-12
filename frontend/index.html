@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="bg-gray-100 font-sans">
-<!-- Header -->
 <header class="bg-blue-600 text-white py-4">
     <div class="container mx-auto px-4 flex justify-between items-center">
         <a href="index.html" class="flex items-center space-x-2">
@@ -26,50 +25,48 @@
     </div>
 </header>
 
-<!-- Hero Section -->
 <section class="py-12 text-center bg-white">
     <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold mb-4">Don’t Fall for Fake News</h2>
-        <p class="text-lg mb-6">Analyze URLs for suspicious links, clickbait, toxic language, and misinformation with TrustNoNews.</p>
-        <a href="pipeline.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Try Full Analysis</a>
+        <p class="text-lg mb-6 max-w-2xl mx-auto">
+            Analyze URLs for suspicious links, clickbait, toxic language, and misinformation with TrustNoNews.
+        </p>
+        <a
+                href="pipeline.html"
+                class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+        >
+            Try Full Analysis
+        </a>
     </div>
 </section>
 
-<!-- Features Section -->
 <section class="py-12 bg-gray-100">
     <div class="container mx-auto px-4">
         <h3 class="text-2xl font-bold text-center mb-8">What We Check</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="result-card">
                 <h4 class="text-xl font-semibold mb-2">Suspicious Links</h4>
-                <p>Detect redirects to untrustworthy domains.</p>
-                <a href="check-link.html" class="text-blue-600 hover:underline">Try it</a>
+                <p class="text-gray-600">Detect redirects to untrustworthy domains.</p>
+                <a href="check-link.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="result-card">
                 <h4 class="text-xl font-semibold mb-2">Clickbait Titles</h4>
-                <p>Identify exaggerated or misleading headlines.</p>
-                <a href="check-clickbait.html" class="text-blue-600 hover:underline">Try it</a>
+                <p class="text-gray-600">Identify exaggerated or misleading headlines.</p>
+                <a href="check-clickbait.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="result-card">
                 <h4 class="text-xl font-semibold mb-2">Sensitive Language</h4>
-                <p>Flag toxic or harmful content.</p>
-                <a href="check-sensitive.html" class="text-blue-600 hover:underline">Try it</a>
+                <p class="text-gray-600">Flag toxic or harmful content.</p>
+                <a href="check-sensitive.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="result-card">
                 <h4 class="text-xl font-semibold mb-2">Fake News</h4>
-                <p>Compare with trusted sources.</p>
-                <a href="check-fake.html" class="text-blue-600 hover:underline">Try it</a>
+                <p class="text-gray-600">Compare with trusted sources.</p>
+                <a href="check-fake.html" class="text-blue-600 hover:underline mt-2 inline-block">Try it</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-blue-600 text-white py-6">
-    <div class="container mx-auto text-center">
-        <p>© 2025 TrustNoNews. All rights reserved.</p>
-        <a href="/about" class="text-white hover:underline">About</a>
-    </div>
-</footer>
 </body>
 </html>

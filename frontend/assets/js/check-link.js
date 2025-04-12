@@ -15,102 +15,86 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const data = await makeApiCall('/check-link', url);
 
-            // Set basic information
-            const statusElement = document.getElementById('is-suspicious');
-            statusElement.textContent = data.is_suspicious ? 'Yes' : 'No';
-            statusElement.className = data.is_suspicious ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold';
-            
-            // Update the redirected URL with proper styling
-            const redirectedUrlElement = document.getElementById('redirected-url');
-            redirectedUrlElement.textContent = data.redirected_url || 'N/A';
-            redirectedUrlElement.className = 'break-all text-sm';
-            
-            document.getElementById('reason').textContent = data.reason?.trim() || 'N/A';
-            document.getElementById('explanation').textContent = data.explanation?.trim() || 'N/A';
+            result.innerHTML = `
+        <div class="result-card" role="region" aria-live="polite">
+          <div class="accordion-container" role="tablist" aria-orientation="horizontal">
+            <div class="accordion" role="tabpanel">
+              <button class="accordion-header" type="button" aria-expanded="true" aria-controls="link-status" role="tab">
+                <h3 class="flex items-center">
+                  <span class="mr-2">${
+                data.is_suspicious
+                    ? '<svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                    : '<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
+            }</span>
+                  Status
+                </h3>
+                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div id="link-status" class="accordion-content" aria-expanded="true">
+                <div class="status-indicator ${
+                data.is_suspicious ? 'status-danger' : 'status-safe'
+            }">
+                  ${data.is_suspicious ? 'Potentially Unsafe' : 'Safe Link'}
+                </div>
+              </div>
+            </div>
+            <div class="accordion" role="tabpanel">
+              <button class="accordion-header" type="button" aria-expanded="false" aria-controls="link-details" role="tab">
+                <h3>Details</h3>
+                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div id="link-details" class="accordion-content" aria-expanded="false">
+                <div class="space-y-2">
+                  <p><strong>Redirected URL:</strong> <span class="text-gray-800">${
+                data.redirected_url || 'N/A'
+            }</span></p>
+                  <p><strong>Reason:</strong> <span class="text-gray-800">${
+                data.reason?.trim() || 'N/A'
+            }</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion" role="tabpanel">
+              <button class="accordion-header" type="button" aria-expanded="false" aria-controls="link-explanation" role="tab">
+                <h3>Explanation</h3>
+                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div id="link-explanation" class="accordion-content explanation" aria-expanded="false">
+                <p>${data.explanation?.trim() || 'No additional information available.'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
 
-            // Compact view for non-suspicious links
-            const resultContainer = document.getElementById('result');
-            const resultGrid = document.getElementById('result-grid');
-            
-            if (!data.is_suspicious) {
-                resultContainer.classList.add('compact-result');
-                resultGrid.classList.remove('md:grid-cols-2');
-                resultGrid.classList.add('md:grid-cols-1');
-                document.getElementById('redirect-section').classList.add('hidden');
-            } else {
-                resultContainer.classList.remove('compact-result');
-                resultGrid.classList.add('md:grid-cols-2');
-                resultGrid.classList.remove('md:grid-cols-1');
-                
-                // Show redirect section only if there's redirect data and the link is suspicious
-                if (data.redirect_chain && data.redirect_chain.length > 0) {
-                    document.getElementById('redirect-section').classList.remove('hidden');
-                } else {
-                    document.getElementById('redirect-section').classList.add('hidden');
-                }
-            }
-
-            // Handle redirect chain
-            const redirectChainContainer = document.getElementById('redirect-chain');
-            redirectChainContainer.innerHTML = '';
-            
-            if (data.redirect_chain && data.redirect_chain.length > 0 && data.is_suspicious) {
-                // Create table header
-                const table = document.createElement('table');
-                table.className = 'min-w-full bg-white border border-gray-200';
-                
-                const thead = document.createElement('thead');
-                thead.innerHTML = `
-                    <tr class="bg-gray-100">
-                        <th class="border px-4 py-2">Step</th>
-                        <th class="border px-4 py-2">Type</th>
-                        <th class="border px-4 py-2">URL</th>
-                    </tr>
-                `;
-                table.appendChild(thead);
-                
-                const tbody = document.createElement('tbody');
-                data.redirect_chain.forEach(redirect => {
-                    const row = document.createElement('tr');
-                    
-                    // Step column
-                    const stepCell = document.createElement('td');
-                    stepCell.className = 'border px-4 py-2 text-center';
-                    stepCell.textContent = redirect.step;
-                    row.appendChild(stepCell);
-                    
-                    // Type column
-                    const typeCell = document.createElement('td');
-                    typeCell.className = 'border px-4 py-2';
-                    typeCell.textContent = redirect.type;
-                    row.appendChild(typeCell);
-                    
-                    // URL column
-                    const urlCell = document.createElement('td');
-                    urlCell.className = 'border px-4 py-2 break-all';
-                    
-                    const urlLink = document.createElement('a');
-                    urlLink.href = redirect.url;
-                    urlLink.textContent = redirect.url;
-                    urlLink.className = 'text-blue-600 hover:underline';
-                    urlLink.target = '_blank';
-                    urlLink.rel = 'noopener noreferrer';
-                    
-                    urlCell.appendChild(urlLink);
-                    row.appendChild(urlCell);
-                    
-                    tbody.appendChild(row);
-                });
-                
-                table.appendChild(tbody);
-                redirectChainContainer.appendChild(table);
-            }
+            setupAccordions(result);
 
             hideLoading(loading);
             showResult(result);
+            result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            result.querySelector('.accordion-header').focus();
         } catch (err) {
             hideLoading(loading);
-            showError(error, err.message);
+            showError(error, err.message || 'Failed to analyze the URL.');
         }
     });
+
+    function setupAccordions(container) {
+        const headers = container.querySelectorAll('.accordion-header');
+        headers.forEach((header) => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const isExpanded = content.getAttribute('aria-expanded') === 'true';
+                content.setAttribute('aria-expanded', !isExpanded);
+                header.setAttribute('aria-expanded', !isExpanded);
+                header.querySelector('svg').classList.toggle('rotate-180');
+            });
+            header.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    header.click();
+                }
+            });
+        });
+    }
 });
