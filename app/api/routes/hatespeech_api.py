@@ -71,7 +71,8 @@ def analyze_hatespeech(content: str, threshold: float) -> dict:
         sensitive_result = check_sensitive_language(
             content=content,
             label=max_label,
-            is_sensitive=True
+            is_sensitive=True,
+            criteria = response["criteria"]
         )
         response.update({
             "conclusion": "Content contains hate speech",
@@ -89,7 +90,8 @@ def analyze_hatespeech(content: str, threshold: float) -> dict:
         sensitive_result = check_sensitive_language(
             content=content,
             label="none",
-            is_sensitive=False
+            is_sensitive=False,
+            criteria = response["criteria"]
         )
         response.update({
             "conclusion": "Content does not contain hate speech",
