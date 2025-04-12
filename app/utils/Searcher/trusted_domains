@@ -1,0 +1,66 @@
+# Trusted news domains
+# Format: one domain per line
+# Lines starting with # are comments
+
+# General news sites
+reuters.com
+apnews.com
+bbc.com
+bbc.co.uk
+nytimes.com
+washingtonpost.com
+wsj.com
+theguardian.com
+cnn.com
+bloomberg.com
+nbcnews.com
+cbsnews.com
+abcnews.go.com
+npr.org
+economist.com
+
+# Vietnamese news sources
+e.vnexpress.net
+vnexpress.net
+tuoitre.vn
+thanhnien.vn
+vietnamnet.vn
+dantri.com.vn
+baomoi.com
+
+# US news sources
+usatoday.com
+latimes.com
+chicagotribune.com
+nypost.com
+politico.com
+
+# UK news sources
+telegraph.co.uk
+independent.co.uk
+dailymail.co.uk
+ft.com
+mirror.co.uk
+
+# Sports
+espn.com
+skysports.com
+sports.yahoo.com
+bleacherreport.com
+theathletic.com
+goal.com
+
+# Tech
+techcrunch.com
+wired.com
+theverge.com
+arstechnica.com
+zdnet.com
+cnet.com
+
+# Science
+scientificamerican.com
+nature.com
+sciencemag.org
+newscientist.com
+sciencedaily.com

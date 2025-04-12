@@ -15,7 +15,7 @@ def check_clickbait(title: str, content: str):
         print(f"Error calculating similarity: {e}")
 
     # Determine if the content is clickbait
-    is_clickbait = similarity < 0.6
+    is_clickbait = similarity < 0.65
 
     # Generate an explanation for the result
     prompt = generate_clickbait_prompt(

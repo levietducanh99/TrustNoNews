@@ -38,7 +38,7 @@ async def check_fake_news(request: FakeNewsRequest):
         urls = [result['url'] for result in results]
 
         # Determine if the news is fake based on similarity scores
-        is_fake = all(score < 0.3 for score in similarity_scores)  # Example threshold
+        is_fake = all(score < 0.75 for score in similarity_scores)  # Example threshold
 
         # Generate prompt and call Ollama for explanation
         prompt = generate_fake_news_prompt(

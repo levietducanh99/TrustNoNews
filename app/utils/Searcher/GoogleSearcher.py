@@ -7,7 +7,8 @@ def search_articles(title):
     Search for articles based on the given title and return a list of dictionaries
     containing the article title and summary.
     """
-    domains = ["e.vnexpress.net", "skysports.com"]  # Specify allowed domains
+    domains = ["e.vnexpress.net", "skysports.com", "espn.com", "eurosport.com", "ecb.co.uk", "bbc.com",
+               "theguardian.com", "reuters.com", "cnn.com", "theathletic.com", "thetimes.co.uk"]
 
     # Append domain filters to the query
     domain_filters = " OR ".join([f"site:{domain}" for domain in domains])

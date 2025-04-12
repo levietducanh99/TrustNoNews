@@ -14,3 +14,5 @@ bonus
 reward
 track
 offer
+bet
+live

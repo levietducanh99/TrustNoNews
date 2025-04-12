@@ -6,7 +6,7 @@ def summarize_text(text: str, max_length: int = 400, min_length: int = 100) -> s
         # Use Ollama to summarize the text
         response = ollama.chat(
             model="mistral",
-            messages=[{"role": "user", "content": f"Tóm tắt nội dung: {text}"}],
+            messages=[{"role": "user", "content": f"Summary content: {text}"}],
             stream=False
         )
         summary = response.get("message", {}).get("content", "").strip()
