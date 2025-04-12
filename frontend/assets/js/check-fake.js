@@ -20,11 +20,23 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('input-title').textContent = data.input_title || 'N/A';
             const similarTitles = document.getElementById('similar-titles');
             similarTitles.innerHTML = '';
+            
             data.similar_titles?.forEach((title, i) => {
                 const li = document.createElement('li');
-                li.textContent = `${title} (Score: ${data.similarity_scores[i]?.toFixed(2) || 'N/A'})`;
+                const score = data.similarity_scores[i]?.toFixed(2) || 'N/A';
+                const articleUrl = data.urls?.[i] || '#';
+                
+                li.innerHTML = `
+                    <div class="mb-2">
+                        <div>${title} (Score: ${score})</div>
+                        <a href="${articleUrl}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                            ${articleUrl}
+                        </a>
+                    </div>
+                `;
                 similarTitles.appendChild(li);
             });
+            
             document.getElementById('explanation').textContent = data.explanation || 'N/A';
 
             hideLoading(loading);

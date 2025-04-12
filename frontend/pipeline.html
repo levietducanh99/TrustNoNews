@@ -44,6 +44,7 @@
             <h3 class="text-xl font-semibold mb-4">Summary</h3>
             <p><strong>URL:</strong> <span id="summary-url"></span></p>
             <p><strong>Trust Level:</strong> <span id="trust-level"></span></p>
+            <p><strong>Summary:</strong> <span id="summary-text"></span></p>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-md mb-4">
@@ -69,11 +70,16 @@
 
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h3 class="text-lg font-semibold mb-2">Fake News</h3>
-            <p><strong>Fake:</strong> <span id="fake-is"></span></p>
-            <p><strong>Title:</strong> <span id="fake-title"></span></p>
-            <p><strong>Similar Titles:</strong></p>
-            <ul id="fake-similar" class="list-disc pl-6"></ul>
-            <p><strong>Explanation:</strong> <span id="fake-explanation"></span></p>
+            <p class="mb-2"><strong>Fake:</strong> <span id="fake-is"></span></p>
+            <p class="mb-2"><strong>Title:</strong> <span id="fake-title"></span></p>
+            <div class="mb-4">
+                <p class="font-semibold mb-2">Similar Articles:</p>
+                <ul id="fake-similar" class="list-disc pl-6 space-y-2"></ul>
+            </div>
+            <div>
+                <p class="font-semibold mb-2">Explanation:</p>
+                <div id="fake-explanation" class="text-gray-700 bg-gray-50 p-3 rounded"></div>
+            </div>
         </div>
     </div>
 

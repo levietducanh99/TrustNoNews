@@ -7,6 +7,23 @@
     <link rel="shortcut icon" href="assets/img/News.svg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .url-container {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
+            max-width: 100%;
+        }
+        
+        .compact-result {
+            max-width: 600px !important;
+            transition: max-width 0.3s ease;
+        }
+        
+        .compact-result .bg-gray-50 {
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
 <header class="bg-blue-600 text-white py-4">
@@ -39,12 +56,32 @@
         <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 mx-auto"></div>
     </div>
 
-    <div id="result" class="hidden mt-6 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold mb-4">Result</h3>
-        <p><strong>Suspicious:</strong> <span id="is-suspicious"></span></p>
-        <p><strong>Redirected URL:</strong> <span id="redirected-url"></span></p>
-        <p><strong>Reason:</strong> <span id="reason"></span></p>
-        <p><strong>Explanation:</strong> <span id="explanation"></span></p>
+    <div id="result" class="hidden mt-6 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold mb-4">Analysis Result</h3>
+        
+        <div id="result-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="text-lg font-semibold mb-2">Summary</h4>
+                <div class="space-y-2">
+                    <p><strong>Suspicious:</strong> <span id="is-suspicious"></span></p>
+                    <div>
+                        <p><strong>Final URL:</strong></p>
+                        <div class="url-container mt-1 pl-4">
+                            <span id="redirected-url" class="break-all text-sm"></span>
+                        </div>
+                    </div>
+                    <p><strong>Reason:</strong> <span id="reason" class="break-words"></span></p>
+                    <p><strong>Explanation:</strong> <span id="explanation" class="break-words"></span></p>
+                </div>
+            </div>
+            
+            <div id="redirect-section" class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="text-lg font-semibold mb-2">Redirect Chain</h4>
+                <div id="redirect-chain" class="overflow-x-auto">
+                    <!-- Redirect chain will be inserted here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="error" class="hidden mt-6 max-w-lg mx-auto bg-red-100 p-6 rounded-lg text-red-700"></div>

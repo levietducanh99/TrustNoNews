@@ -17,6 +17,7 @@ class FakeNewsResponse(BaseModel):
     input_title: str
     similar_titles: list[str]
     similarity_scores: list[float]
+    urls:list[str]
     explanation: str
 
 @router.post("/check-fake-news", response_model=FakeNewsResponse)
@@ -34,6 +35,7 @@ async def check_fake_news(request: FakeNewsRequest):
         input_title = scrape_url['title'] if scrape_url else "Unknown Title"
         similar_titles = [result['title'] for result in results]
         similarity_scores = [result['similarity'] for result in results]
+        urls = [result['url'] for result in results]
 
         # Determine if the news is fake based on similarity scores
         is_fake = all(score < 0.3 for score in similarity_scores)  # Example threshold
@@ -57,6 +59,7 @@ async def check_fake_news(request: FakeNewsRequest):
             "input_title": input_title,
             "similar_titles": similar_titles,
             "similarity_scores": similarity_scores,
+            "urls": urls,
             "explanation": explanation,
         }
         return response
