@@ -1,4 +1,4 @@
-from app.services.clickbait_detector import check_fake_news
+from app.services.generate_prompt import check_fake_news
 
 
 def test_clickbait_explain():
