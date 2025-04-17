@@ -6,6 +6,7 @@
     <title>Full Analysis - TrustNoNews</title>
     <link rel="shortcut icon" href="assets/img/News.svg" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="bg-gray-100 font-sans">
@@ -26,6 +27,9 @@
 </header>
 
 <section class="py-12 container mx-auto px-4">
+    <div class="text-center mb-6">
+        <i class="fas fa-tasks text-purple-600 text-6xl"></i>
+    </div>
     <h2 class="text-3xl font-bold mb-6 text-center gradient-title-purple">Full News Analysis</h2>
     <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
         Comprehensive analysis combining all our tools: suspicious link detection, clickbait analysis, sensitive language check, and fake news verification. Get a complete trust assessment of any news article in one go.
@@ -35,7 +39,12 @@
             <label for="url" class="block text-lg mb-2">Enter URL</label>
             <input type="url" id="url" class="w-full p-3 border rounded-lg" placeholder="https://example.com" required aria-required="true">
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Analyze Now</button>
+        <button
+                type="submit"
+                class="w-full bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500"
+        >
+            Start Full Analysis
+        </button>
     </form>
 
     <div id="loading" class="hidden text-center mt-6">
