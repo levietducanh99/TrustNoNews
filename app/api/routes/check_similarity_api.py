@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.services.show_list_similarity import show_list_similarity
 from app.utils.Scraper.scraper import scrape
 from app.services.generate_prompt import generate_fake_news_prompt
+from app.src.models.search_models import SearchRequest
+from app.src.services.search_pipeline import SearchPipeline
 import ollama
 
 router = APIRouter()
@@ -17,8 +18,11 @@ class FakeNewsResponse(BaseModel):
     input_title: str
     similar_titles: list[str]
     similarity_scores: list[float]
-    urls:list[str]
+    urls: list[str]
     explanation: str
+
+# Initialize the search pipeline once
+search_pipeline = SearchPipeline()
 
 @router.post("/check-fake-news", response_model=FakeNewsResponse)
 async def check_fake_news(request: FakeNewsRequest):
@@ -27,18 +31,30 @@ async def check_fake_news(request: FakeNewsRequest):
         raise HTTPException(status_code=400, detail="Missing 'url' in request body")
 
     try:
-        # Use the show_list_similarity function to get similar articles
-        results = show_list_similarity(url)
-
+        # Scrape the URL to get the title
         scrape_url = scrape(url)
-        # Extract relevant data from the results
         input_title = scrape_url['title'] if scrape_url else "Unknown Title"
-        similar_titles = [result['title'] for result in results]
-        similarity_scores = [result['similarity'] for result in results]
-        urls = [result['url'] for result in results]
+        
+        # Create a search request using the title as the query
+        search_request = SearchRequest(
+            query=input_title,
+            page=1,
+            page_size=15  # Get top 15 results, matching previous functionality
+        )
+        
+        # Execute the search using the pipeline
+        search_results = await search_pipeline.execute_search(search_request)
+        
+        # Use the semantic results as they're most relevant for similarity checking
+        results = search_results.semantic_results
+        
+        # Extract relevant data from the results
+        similar_titles = [result.title for result in results]
+        similarity_scores = [result.semantic_score for result in results]
+        urls = [result.url if hasattr(result, 'url') and result.url else "" for result in results]
 
         # Determine if the news is fake based on similarity scores
-        is_fake = all(score < 0.75 for score in similarity_scores)  # Example threshold
+        is_fake = not any(score < 0.7 for score in similarity_scores)  # Example threshold
 
         # Generate prompt and call Ollama for explanation
         prompt = generate_fake_news_prompt(
@@ -65,4 +81,3 @@ async def check_fake_news(request: FakeNewsRequest):
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing request: {str(e)}")
-
