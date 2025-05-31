@@ -2,7 +2,7 @@ Whoosh Index Information
 =====================
 
 Index Location: whoosh_index
-Number of Documents: 209527
+Number of Documents: 556
 
 Schema:
   - category: KEYWORD

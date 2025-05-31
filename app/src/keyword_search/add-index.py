@@ -1,11 +1,11 @@
 import os
 import sys
 import logging
-import psycopg2
+import pymongo
+from bson import ObjectId
 from whoosh.index import create_in, open_dir, exists_in
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
-from whoosh.qparser import MultifieldParser, OrGroup,PhrasePlugin
-
+from whoosh.qparser import MultifieldParser, OrGroup, PhrasePlugin
 from whoosh.analysis import StemmingAnalyzer
 import spacy
 
@@ -13,13 +13,11 @@ import spacy
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Database connection parameters
-DB_CONFIG = {
-    "host": "dpg-d0g2d1idbo4c73auv9i0-a.singapore-postgres.render.com",
-    "port": "5432",
-    "user": "hybrid_search_database_user",
-    "password": "EvaQhGOaGF7QgdgteoxWvmfKvWe0VqM1",
-    "database": "hybrid_search_database"
+# MongoDB connection parameters
+MONGO_CONFIG = {
+    "uri": "mongodb+srv://trung7cyv:Pwrl2KClurSIANRy@cluster0.wwa6we5.mongodb.net/?retryWrites=true&w=majority",
+    "database": "news_scraper",
+    "collection": "articles"
 }
 
 # Whoosh settings
@@ -58,51 +56,41 @@ def get_index():
         sys.exit(1)
 
 
-# Connect to PostgreSQL database
+# Connect to MongoDB database
 def connect_to_database():
-    """Establish connection to PostgreSQL database"""
+    """Establish connection to MongoDB database"""
     try:
-        conn = psycopg2.connect(
-            host=DB_CONFIG["host"],
-            port=DB_CONFIG["port"],
-            user=DB_CONFIG["user"],
-            password=DB_CONFIG["password"],
-            database=DB_CONFIG["database"]
-        )
-        logger.info("Successfully connected to PostgreSQL database")
-        return conn
+        client = pymongo.MongoClient(MONGO_CONFIG["uri"])
+        db = client[MONGO_CONFIG["database"]]
+        collection = db[MONGO_CONFIG["collection"]]
+        logger.info("Successfully connected to MongoDB database")
+        return collection
     except Exception as e:
         logger.error(f" Database connection error: {e}")
         raise
 
 
-# Fetch documents from PostgreSQL database
+# Fetch documents from MongoDB database
 def fetch_documents_from_db():
-    """Fetch all documents from the database"""
+    """Fetch all documents from the MongoDB database"""
     documents = []
     try:
-        conn = connect_to_database()
-        with conn.cursor() as cursor:
-            # Use the correct table name with quotes
-            cursor.execute("""
-                SELECT id, link, headline, category, short_description, keywords_proper_nouns
-                FROM "WebScrapData_rows"
-            """)
-            rows = cursor.fetchall()
-
-            for row in rows:
-                doc = {
-                    "id": str(row[0]),  # Ensure ID is a string for Whoosh
-                    "link": row[1] or "",
-                    "headline": row[2] or "",
-                    "category": row[3] or "",
-                    "short_description": row[4] or "",
-                    "keywords_proper_nouns": row[5] or ""  # Fixed index from 6 to 5
-                }
-                documents.append(doc)
+        collection = connect_to_database()
+        cursor = collection.find({})
         
-        conn.close()
-        logger.info(f"Retrieved {len(documents)} documents from database")
+        for doc in cursor:
+            # Map MongoDB document fields to Whoosh schema fields
+            whoosh_doc = {
+                "id": str(doc.get("_id", "")),  # Convert ObjectId to string
+                "link": doc.get("url", ""),
+                "headline": doc.get("title", ""),
+                "category": doc.get("source", ""),
+                "short_description": doc.get("content", ""),
+                "keywords_proper_nouns": doc.get("keywords", "")
+            }
+            documents.append(whoosh_doc)
+        
+        logger.info(f"Retrieved {len(documents)} documents from MongoDB database")
         return documents
     except Exception as e:
         logger.error(f" Error fetching documents from database: {e}")
@@ -199,7 +187,6 @@ def search_documents(query, size=5):
             print()
 
 
-
 # Export index info
 def export_index_info():
     ix = open_dir(INDEX_DIR)
@@ -237,4 +224,3 @@ if __name__ == "__main__":
         if query.lower() == 'exit':
             break
         search_documents(query)
-
