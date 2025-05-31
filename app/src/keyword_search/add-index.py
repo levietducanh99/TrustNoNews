@@ -56,6 +56,24 @@ def get_index():
         sys.exit(1)
 
 
+# Get already indexed document IDs
+def get_indexed_document_ids(ix):
+    """Get IDs of documents already in the index"""
+    indexed_ids = set()
+    try:
+        with ix.searcher() as searcher:
+            for doc_num in range(searcher.doc_count_all()):
+                stored_fields = searcher.stored_fields(doc_num)
+                if 'id' in stored_fields:
+                    indexed_ids.add(stored_fields['id'])
+        
+        logger.info(f"Found {len(indexed_ids)} already indexed documents")
+        return indexed_ids
+    except Exception as e:
+        logger.error(f"Error retrieving indexed document IDs: {e}")
+        return set()
+
+
 # Connect to MongoDB database
 def connect_to_database():
     """Establish connection to MongoDB database"""
@@ -71,26 +89,46 @@ def connect_to_database():
 
 
 # Fetch documents from MongoDB database
-def fetch_documents_from_db():
-    """Fetch all documents from the MongoDB database"""
+def fetch_documents_from_db(existing_ids=None):
+    """Fetch documents from the MongoDB database, optionally filtering already indexed ones"""
     documents = []
     try:
         collection = connect_to_database()
-        cursor = collection.find({})
         
-        for doc in cursor:
-            # Map MongoDB document fields to Whoosh schema fields
-            whoosh_doc = {
-                "id": str(doc.get("_id", "")),  # Convert ObjectId to string
-                "link": doc.get("url", ""),
-                "headline": doc.get("title", ""),
-                "category": doc.get("source", ""),
-                "short_description": doc.get("content", ""),
-                "keywords_proper_nouns": doc.get("keywords", "")
-            }
-            documents.append(whoosh_doc)
+        # Use a filter if we have existing IDs
+        if existing_ids:
+            # Convert string IDs to ObjectId if needed for MongoDB query
+            # This is a bit tricky since our existing IDs are strings and MongoDB uses ObjectId
+            cursor = collection.find({})
+            # Filter client-side instead of in the query for simplicity
+            for doc in cursor:
+                doc_id = str(doc.get("_id", ""))
+                if doc_id not in existing_ids:
+                    # Map MongoDB document fields to Whoosh schema fields
+                    whoosh_doc = {
+                        "id": doc_id,
+                        "link": doc.get("url", ""),
+                        "headline": doc.get("title", ""),
+                        "category": doc.get("source", ""),
+                        "short_description": doc.get("content", ""),
+                        "keywords_proper_nouns": doc.get("keywords", "")
+                    }
+                    documents.append(whoosh_doc)
+        else:
+            # Get all documents if we don't have existing IDs
+            cursor = collection.find({})
+            for doc in cursor:
+                whoosh_doc = {
+                    "id": str(doc.get("_id", "")),
+                    "link": doc.get("url", ""),
+                    "headline": doc.get("title", ""),
+                    "category": doc.get("source", ""),
+                    "short_description": doc.get("content", ""),
+                    "keywords_proper_nouns": doc.get("keywords", "")
+                }
+                documents.append(whoosh_doc)
         
-        logger.info(f"Retrieved {len(documents)} documents from MongoDB database")
+        logger.info(f"Retrieved {len(documents)} new documents from MongoDB database")
         return documents
     except Exception as e:
         logger.error(f" Error fetching documents from database: {e}")
@@ -100,7 +138,7 @@ def fetch_documents_from_db():
 # Index documents to Whoosh
 def index_documents(ix, documents):
     if not documents:
-        logger.info("ℹ️ No documents to index")
+        logger.info("ℹ️ No new documents to index")
         return
 
     try:
@@ -124,7 +162,7 @@ def index_documents(ix, documents):
                 logger.warning(f"⚠️ Failed to index document id={doc['id']}: {e}")
 
         writer.commit()
-        logger.info(f" Indexed {success} documents. Failed: {failed}")
+        logger.info(f" Indexed {success} new documents. Failed: {failed}")
     except Exception as e:
         logger.error(f" Error indexing documents: {e}")
 
@@ -207,14 +245,24 @@ if __name__ == "__main__":
     # Check if this is a first-time run or using existing index
     ix, is_new_index = get_index()
 
-    # Only index documents if this is a new index
     if is_new_index:
+        # New index - index all documents
         logger.info(" Creating new index, starting indexing process...")
         documents = fetch_documents_from_db()
         index_documents(ix, documents)
         export_index_info()
     else:
-        logger.info(" Using existing index, skipping indexing step")
+        # Existing index - only index new documents
+        logger.info(" Using existing index, checking for new documents...")
+        existing_ids = get_indexed_document_ids(ix)
+        new_documents = fetch_documents_from_db(existing_ids)
+        
+        if new_documents:
+            logger.info(f" Found {len(new_documents)} new documents to index")
+            index_documents(ix, new_documents)
+            export_index_info()
+        else:
+            logger.info(" No new documents found to index")
 
     # Interactive search loop
     print("\n🔍 Search the document database")
@@ -224,3 +272,4 @@ if __name__ == "__main__":
         if query.lower() == 'exit':
             break
         search_documents(query)
+

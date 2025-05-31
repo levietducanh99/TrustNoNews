@@ -46,7 +46,7 @@ async def check_fake_news(request: FakeNewsRequest):
         search_results = await search_pipeline.execute_search(search_request)
         
         # Use the semantic results as they're most relevant for similarity checking
-        results = search_results.semantic_results
+        results = search_results.rrf_results
         
         # Extract relevant data from the results
         similar_titles = [result.title for result in results]
@@ -54,7 +54,7 @@ async def check_fake_news(request: FakeNewsRequest):
         urls = [result.url if hasattr(result, 'url') and result.url else "" for result in results]
 
         # Determine if the news is fake based on similarity scores
-        is_fake = not any(score < 0.7 for score in similarity_scores)  # Example threshold
+        is_fake = not any(score > 0.7 for score in similarity_scores)  # Example threshold
 
         # Generate prompt and call Ollama for explanation
         prompt = generate_fake_news_prompt(
