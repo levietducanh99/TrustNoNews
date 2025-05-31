@@ -2,7 +2,7 @@ def generate_clickbait_prompt(title: str, content_summary: str, similarity_score
     if is_clickbait:
         prompt = (
             "Imagine you are an assistant explaining clickbait. Please review the title and the article summary below. "
-            "Based on the similarity between the title and the content, can you determine whether the title is clickbait and why?\n\n"
+            "Based on the similarity between the title and the content and our clickbait detection model, can you determine whether the title is clickbait and why?\n\n"
             f"Title: {title}\n"
             f"Article Summary: {content_summary}\n"
             f"Similarity Score: {similarity_score:.2f}\n"
@@ -15,7 +15,7 @@ def generate_clickbait_prompt(title: str, content_summary: str, similarity_score
     else:
         prompt = (
             "Imagine you are an assistant explaining clickbait. Please review the title and the article summary below. "
-            "Based on the similarity between the title and the content, can you determine whether the title is clickbait and why?\n\n"
+            "Based on the similarity between the title and the content and our clickbait detection model, can you determine whether the title is clickbait and why?\n\n"
             f"Title: {title}\n"
             f"Article Summary: {content_summary}\n"
             f"Similarity Score: {similarity_score:.2f}\n"
