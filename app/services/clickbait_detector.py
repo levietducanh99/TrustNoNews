@@ -61,24 +61,33 @@ def check_clickbait(title: str, content: str):
     # Get model-based clickbait prediction
     model_prediction = predict_clickbait(title)
     
-    # Summarize the content
-    summary = summarize_text(content)
+    # Initialize variables
+    summary = ""
+    similarity = 0.0
+    
+    # Step 1: Check if model predicts clickbait
+    if model_prediction["is_clickbait"]:
+        # If model predicts clickbait, skip similarity check
+        is_clickbait = True
+    else:
+        # Step 2: Only if model doesn't predict clickbait, check similarity
+        # Summarize the content
+        summary = summarize_text(content)
 
-    # Calculate similarity between the title and the summary
-    try:
-        similarity = get_similarity(title, summary)
-    except Exception as e:
-        similarity = 0.0  # Default similarity if error occurs
-        print(f"Error calculating similarity: {e}")
-
-    # Determine if the content is clickbait using both approaches
-    # Consider it clickbait if either the model says so or similarity is low
-    is_clickbait = model_prediction["is_clickbait"] or similarity < 0.65
-
-    # Generate an explanation for the result
+        # Calculate similarity between the title and the summary
+        try:
+            similarity = get_similarity(title, summary)
+            # Consider it clickbait if similarity is low
+            is_clickbait = similarity < 0.65
+        except Exception as e:
+            similarity = 0.0
+            is_clickbait = False  # Default if error occurs
+            print(f"Error calculating similarity: {e}")
+    
+    # Generate an explanation for the result using the appropriate approach
     prompt = generate_clickbait_prompt(
         title=title,
-        content_summary=summary,
+        content_summary=summary if summary else "Not analyzed due to model prediction",
         similarity_score=similarity,
         is_clickbait=is_clickbait
     )
@@ -102,3 +111,4 @@ def check_clickbait(title: str, content: str):
         "summary": summary,
         "title": title
     }
+
