@@ -64,7 +64,7 @@ def generate_vectors(output_csv_path, model_name='all-MiniLM-L6-v2'):
             df['content'] = ''
     
     # Combine title and content
-    df['text'] = df['title'].fillna('') + ". " + df['content'].fillna('')
+    df['text'] = df['title']
     
     # Generate embeddings
     print("🔄 Đang tạo embedding, vui lòng chờ...")
