@@ -1,7 +1,7 @@
 import logging
 import os
-from dotenv import load_dotenv  # Add this import
-from openai import OpenAI
+from dotenv import load_dotenv
+import google.generativeai as genai
 
 from app.utils.Scraper.scraper import scrape
 from app.src.models.search_models import SearchRequest
@@ -12,13 +12,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
-load_dotenv()  # Add this line
+load_dotenv()
 
 # Initialize the search pipeline
 search_pipeline = SearchPipeline()
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Configure Google Gemini
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# Create Gemini model
+gemini_model = genai.GenerativeModel('gemini-1.0-pro')
 
 async def check_fake_news(url: str):
     # Extract title from URL
@@ -62,11 +65,8 @@ async def check_fake_news(url: str):
         is_fake=is_fake
     )
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    explanation = response.choices[0].message.content.strip()
+    response = gemini_model.generate_content(prompt)
+    explanation = response.text.strip()
 
     return {
         "is_fake": is_fake,
@@ -76,4 +76,3 @@ async def check_fake_news(url: str):
         "urls": urls,
         "explanation": explanation
     }
-

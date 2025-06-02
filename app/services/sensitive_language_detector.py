@@ -1,14 +1,17 @@
 import os
-from dotenv import load_dotenv  # Add this import
-from openai import OpenAI
+from dotenv import load_dotenv
+import google.generativeai as genai
 
 from app.prompt.sensitive_prompt import generate_sensitive_explanation
 
 # Load environment variables from .env file
-load_dotenv()  # Add this line
+load_dotenv()
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Configure Google Gemini
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# Create Gemini model
+gemini_model = genai.GenerativeModel('gemini-1.0-pro')
 
 def check_sensitive_language(url: str):
     """
@@ -16,7 +19,7 @@ def check_sensitive_language(url: str):
 
     :param url: Đường dẫn bài viết
     :return: Dictionary chứa thông tin về nhạy cảm, nhãn phân loại và lời giải thích
-    :raises RuntimeError: Nếu có lỗi khi gọi OpenAI
+    :raises RuntimeError: Nếu có lỗi khi gọi Gemini
     """
     # B1: Trích xuất nội dung
     content = extract_content(url)
@@ -32,12 +35,9 @@ def check_sensitive_language(url: str):
     )
 
     try:
-        # B4: Gọi OpenAI API
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
-        )
-        explanation = response.choices[0].message.content.strip()
+        # B4: Gọi Gemini API
+        response = gemini_model.generate_content(prompt)
+        explanation = response.text.strip()
 
         # B5: Trả về kết quả
         return {
@@ -47,5 +47,4 @@ def check_sensitive_language(url: str):
         }
 
     except Exception as e:
-        raise RuntimeError(f"Lỗi khi gọi OpenAI: {str(e)}")
-
+        raise RuntimeError(f"Lỗi khi gọi Gemini: {str(e)}")
