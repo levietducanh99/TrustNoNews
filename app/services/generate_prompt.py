@@ -1,24 +1,28 @@
+import os
+from openai import OpenAI
 from app.prompt.clickbait_prompt import generate_clickbait_prompt
 from app.prompt.fake_news_prompt import generate_fake_news_prompt
 from app.prompt.sensitive_prompt import generate_sensitive_prompt
 from app.prompt.suspicious_link_prompt import generate_suspicious_link_prompt
-import ollama
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 # phóng đại, giật gân
 def check_clickbait_1(title: str, content: str, similarity: float):
     if not title or not content:
         raise ValueError("Tiêu đề và nội dung bài viết không được để trống.")
     is_clickbait = similarity < 0.6
 
-    # Use Ollama to summarize the content
+    # Use OpenAI to summarize the content
     try:
-        summary_response = ollama.chat(
-            model="mistral",
-            messages=[{"role": "user", "content": f"Tóm tắt nội dung: {content}"}],
-            stream=False
+        summary_response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": f"Tóm tắt nội dung: {content}"}]
         )
-        summary = summary_response.get("message", {}).get("content", "").strip()
+        summary = summary_response.choices[0].message.content.strip()
     except Exception as e:
-        raise RuntimeError(f"Lỗi khi gọi API Ollama để tóm tắt: {str(e)}")
+        raise RuntimeError(f"Lỗi khi gọi API OpenAI để tóm tắt: {str(e)}")
 
     # Sinh prompt tiếng Việt
     prompt = generate_clickbait_prompt(
@@ -28,24 +32,15 @@ def check_clickbait_1(title: str, content: str, similarity: float):
         is_clickbait=is_clickbait
     )
     try:
-# Gọi mô hình Ollama (stream)
-        response_stream = ollama.chat(
-            model="mistral",
-            messages=[{"role": "user", "content": prompt}],
-            stream=True
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-
-        explanation = ""
-        # In ra từng chunk từ stream
-        for chunk in response_stream:
-            if "message" in chunk:
-                explanation += chunk["message"]["content"]
-
-        # Trả về kết quả dưới dạng dictionary
-        return explanation.strip()
+        explanation = response.choices[0].message.content.strip()
+        return explanation
     except Exception as e:
         # Xử lý lỗi nếu có trong khi gọi API
-        raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
+        raise RuntimeError(f"Lỗi khi gọi API OpenAI: {str(e)}")
 
 # tin giả
 def check_fake_news(title: str, similar_titles: list, scores: list) -> dict:
@@ -56,7 +51,7 @@ def check_fake_news(title: str, similar_titles: list, scores: list) -> dict:
     :param scores: Danh sách các điểm tương đồng giữa tiêu đề cần kiểm tra và các tiêu đề uy tín
     :return: Dictionary chứa thông tin về tin giả, độ tương đồng và lời giải thích
     :raises ValueError: Nếu tiêu đề hoặc các thông tin liên quan bị thiếu
-    :raises RuntimeError: Nếu có lỗi khi gọi API Ollama
+    :raises RuntimeError: Nếu có lỗi khi gọi API OpenAI
     """
     # Kiểm tra đầu vào
     if not title or similar_titles or scores:
@@ -71,29 +66,23 @@ def check_fake_news(title: str, similar_titles: list, scores: list) -> dict:
     )
 
     try:
-        # Gọi mô hình Ollama với stream
-        response_stream = ollama.chat(
-            model="mistral",  # Mô hình sử dụng
-            messages=[{"role": "user", "content": prompt}],
-            stream=True
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-
-        explanation = ""
-        # Duyệt qua từng chunk từ stream
-        for chunk in response_stream:
-            if "message" in chunk:
-                explanation += chunk["message"]["content"]
+        explanation = response.choices[0].message.content.strip()
 
         # Trả về kết quả dưới dạng dictionary
         return {
             "is_fake": is_fake,
             "similarity_scores": scores,
-            "explanation": explanation.strip()
+            "explanation": explanation
         }
 
     except Exception as e:
         # Xử lý lỗi khi gọi API
-        raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
+        raise RuntimeError(f"Lỗi khi gọi API OpenAI: {str(e)}")
+
 # ngôn ngữ nhạy cảm
 def check_sensitive_language(content: str, label: str, is_sensitive: bool, criteria: list) -> dict:
     # B3: Tạo prompt tiếng Việt
@@ -105,27 +94,21 @@ def check_sensitive_language(content: str, label: str, is_sensitive: bool, crite
     )
 
     try:
-        # B4: Gọi mô hình Ollama với stream
-        response_stream = ollama.chat(
-            model="mistral",
-            messages=[{"role": "user", "content": prompt}],
-            stream=True
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-
-        explanation = ""
-        for chunk in response_stream:
-            if "message" in chunk:
-                explanation += chunk["message"]["content"]
+        explanation = response.choices[0].message.content.strip()
 
         # B5: Trả về kết quả
         return {
             "is_sensitive": is_sensitive,
             "label": label,
-            "explanation": explanation.strip()
+            "explanation": explanation
         }
 
     except Exception as e:
-        raise RuntimeError(f"Lỗi khi gọi Ollama: {str(e)}")
+        raise RuntimeError(f"Lỗi khi gọi OpenAI: {str(e)}")
 
 
 def check_suspicious_link(original_url: str, redirected_url: str, is_suspicious: bool) -> dict:
@@ -136,41 +119,30 @@ def check_suspicious_link(original_url: str, redirected_url: str, is_suspicious:
     :param redirected_url: URL sau khi chuyển hướng
     :return: Dictionary chứa kết luận và lời giải thích
     :raises ValueError: Nếu URL gốc hoặc URL sau khi chuyển hướng bị thiếu
-    :raises RuntimeError: Nếu có lỗi khi gọi API Ollama
+    :raises RuntimeError: Nếu có lỗi khi gọi API OpenAI
     """
     # Kiểm tra đầu vào
     if not original_url or redirected_url:
         raise ValueError("Cả URL gốc và URL sau khi chuyển hướng đều không được để trống.")
 
-    # Logic xác định xem URL có đáng ngờ hay không
-    # Bạn có thể thay đổi cách xác định này tùy theo yêu cầu
-
-    # Sinh prompt để gửi đến Ollama
+    # Sinh prompt để gửi đến OpenAI
     prompt = generate_suspicious_link_prompt(original_url, redirected_url, is_suspicious)
 
     try:
-        # Gọi mô hình Ollama để lấy lời giải thích
-        response_stream = ollama.chat(
-            model="mistral",  # Mô hình sử dụng
-            messages=[{"role": "user", "content": prompt}],
-            stream=True
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-
-        explanation = ""
-        # Duyệt qua từng chunk từ stream
-        for chunk in response_stream:
-            if "message" in chunk:
-                explanation += chunk["message"]["content"]
+        explanation = response.choices[0].message.content.strip()
 
         # Trả về kết quả dưới dạng dictionary
         return {
             "is_suspicious": is_suspicious,
             "original_url": original_url,
             "redirected_url": redirected_url,
-            "explanation": explanation.strip()
+            "explanation": explanation
         }
 
     except Exception as e:
         # Xử lý lỗi khi gọi API
-        raise RuntimeError(f"Lỗi khi gọi API Ollama: {str(e)}")
-
+        raise RuntimeError(f"Lỗi khi gọi API OpenAI: {str(e)}")

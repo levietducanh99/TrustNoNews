@@ -1,6 +1,10 @@
-import ollama
+import os
+from openai import OpenAI
 
 from app.prompt.sensitive_prompt import generate_sensitive_explanation
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def check_sensitive_language(url: str):
     """
@@ -8,7 +12,7 @@ def check_sensitive_language(url: str):
 
     :param url: Đường dẫn bài viết
     :return: Dictionary chứa thông tin về nhạy cảm, nhãn phân loại và lời giải thích
-    :raises RuntimeError: Nếu có lỗi khi gọi Ollama
+    :raises RuntimeError: Nếu có lỗi khi gọi OpenAI
     """
     # B1: Trích xuất nội dung
     content = extract_content(url)
@@ -24,24 +28,19 @@ def check_sensitive_language(url: str):
     )
 
     try:
-        # B4: Gọi mô hình Ollama với stream
-        response_stream = ollama.chat(
-            model="mistral",
-            messages=[{"role": "user", "content": prompt}],
-            stream=True
+        # B4: Gọi OpenAI API
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-
-        explanation = ""
-        for chunk in response_stream:
-            if "message" in chunk:
-                explanation += chunk["message"]["content"]
+        explanation = response.choices[0].message.content.strip()
 
         # B5: Trả về kết quả
         return {
             "is_sensitive": is_sensitive,
             "label": label,
-            "explanation": explanation.strip()
+            "explanation": explanation
         }
 
     except Exception as e:
-        raise RuntimeError(f"Lỗi khi gọi Ollama: {str(e)}")
+        raise RuntimeError(f"Lỗi khi gọi OpenAI: {str(e)}")

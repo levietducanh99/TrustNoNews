@@ -1,10 +1,11 @@
 import logging
+import os
+from openai import OpenAI
 
 from app.utils.Scraper.scraper import scrape
 from app.src.models.search_models import SearchRequest
 from app.src.services.search_pipeline import SearchPipeline
 from app.services.generate_prompt import generate_fake_news_prompt
-import ollama
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -12,6 +13,8 @@ logger = logging.getLogger(__name__)
 # Initialize the search pipeline
 search_pipeline = SearchPipeline()
 
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def check_fake_news(url: str):
     # Extract title from URL
@@ -55,11 +58,11 @@ async def check_fake_news(url: str):
         is_fake=is_fake
     )
 
-    response = ollama.chat(
-        model="mistral",
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
-    explanation = response.get("message", {}).get("content", "").strip()
+    explanation = response.choices[0].message.content.strip()
 
     return {
         "is_fake": is_fake,
