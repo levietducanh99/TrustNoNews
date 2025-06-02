@@ -1,12 +1,22 @@
 from app.utils.Similarity.VectorSimilarity import get_similarity
 from app.utils.Summary.summary_mistral import summarize_text
 from app.prompt.clickbait_prompt import generate_clickbait_prompt
-import ollama
 import joblib
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import re
 import os
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure Google Gemini
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# Create Gemini model
+gemini_model = genai.GenerativeModel('gemini-1.0-pro')
 
 # Define paths to model and tokenizer
 MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'clickbait', 'clickbait_model.h5')
@@ -92,12 +102,8 @@ def check_clickbait(title: str, content: str):
         is_clickbait=is_clickbait
     )
 
-    response = ollama.chat(
-        model="mistral",
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    explanation = response.get("message", {}).get("content", "").strip()
+    response = gemini_model.generate_content(prompt)
+    explanation = response.text.strip()
 
     return {
         "is_clickbait": bool(is_clickbait),
@@ -111,4 +117,3 @@ def check_clickbait(title: str, content: str):
         "summary": summary,
         "title": title
     }
-

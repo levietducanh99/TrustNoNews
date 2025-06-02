@@ -1,17 +1,27 @@
 import logging
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
 
 from app.utils.Scraper.scraper import scrape
 from app.src.models.search_models import SearchRequest
 from app.src.services.search_pipeline import SearchPipeline
 from app.services.generate_prompt import generate_fake_news_prompt
-import ollama
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Load environment variables from .env file
+load_dotenv()
+
 # Initialize the search pipeline
 search_pipeline = SearchPipeline()
 
+# Configure Google Gemini
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# Create Gemini model
+gemini_model = genai.GenerativeModel('gemini-1.0-pro')
 
 async def check_fake_news(url: str):
     # Extract title from URL
@@ -55,11 +65,8 @@ async def check_fake_news(url: str):
         is_fake=is_fake
     )
 
-    response = ollama.chat(
-        model="mistral",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    explanation = response.get("message", {}).get("content", "").strip()
+    response = gemini_model.generate_content(prompt)
+    explanation = response.text.strip()
 
     return {
         "is_fake": is_fake,
