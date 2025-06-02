@@ -4,7 +4,16 @@ from app.prompt.clickbait_prompt import generate_clickbait_prompt
 from app.prompt.fake_news_prompt import generate_fake_news_prompt
 from app.prompt.sensitive_prompt import generate_sensitive_prompt
 from app.prompt.suspicious_link_prompt import generate_suspicious_link_prompt
+import os
+from dotenv import load_dotenv  # Add this import
+from openai import OpenAI
+from app.prompt.clickbait_prompt import generate_clickbait_prompt
+from app.prompt.fake_news_prompt import generate_fake_news_prompt
+from app.prompt.sensitive_prompt import generate_sensitive_prompt
+from app.prompt.suspicious_link_prompt import generate_suspicious_link_prompt
 
+# Load environment variables from .env file
+load_dotenv()  # Add this line
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

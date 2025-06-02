@@ -1,5 +1,6 @@
 import logging
 import os
+from dotenv import load_dotenv  # Add this import
 from openai import OpenAI
 
 from app.utils.Scraper.scraper import scrape
@@ -9,6 +10,9 @@ from app.services.generate_prompt import generate_fake_news_prompt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+# Load environment variables from .env file
+load_dotenv()  # Add this line
 
 # Initialize the search pipeline
 search_pipeline = SearchPipeline()
@@ -72,3 +76,4 @@ async def check_fake_news(url: str):
         "urls": urls,
         "explanation": explanation
     }
+

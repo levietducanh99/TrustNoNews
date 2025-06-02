@@ -1,7 +1,11 @@
 import os
+from dotenv import load_dotenv  # Add this import
 from openai import OpenAI
 
 from app.prompt.sensitive_prompt import generate_sensitive_explanation
+
+# Load environment variables from .env file
+load_dotenv()  # Add this line
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -44,3 +48,4 @@ def check_sensitive_language(url: str):
 
     except Exception as e:
         raise RuntimeError(f"Lỗi khi gọi OpenAI: {str(e)}")
+
