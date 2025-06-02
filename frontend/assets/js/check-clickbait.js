@@ -56,6 +56,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? `${(data.similarity_score * 100).toFixed(0)}%`
                     : 'N/A'
             }</span></p>
+                  <div class="mt-4 pt-3 border-t border-gray-200">
+                    <p class="font-semibold text-blue-600">Model Prediction:</p>
+                    <p><strong>Prediction:</strong> <span class="${
+                      data.model_prediction.is_clickbait ? 'text-red-600 font-medium' : 'text-green-600 font-medium'
+                    }">${data.model_prediction.is_clickbait ? 'Clickbait' : 'Not Clickbait'}</span></p>
+                    <p><strong>Confidence:</strong> <span class="text-gray-800">${
+                      (data.model_prediction.probability * 100).toFixed(1) + '%'
+                    }</span></p>
+                    <p><strong>Clickbait Patterns:</strong> <span class="text-gray-800">${
+                      data.model_prediction.clickbait_words && data.model_prediction.clickbait_words.length > 0 
+                        ? data.model_prediction.clickbait_words.join(', ') 
+                        : 'None detected'
+                    }</span></p>
+                  </div>
                 </div>
               </div>
             </div>

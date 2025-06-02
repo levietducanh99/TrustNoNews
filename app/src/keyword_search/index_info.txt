@@ -1,0 +1,13 @@
+Whoosh Index Information
+=====================
+
+Index Location: whoosh_index
+Number of Documents: 556
+
+Schema:
+  - category: KEYWORD
+  - headline: TEXT
+  - id: ID
+  - keywords_proper_nouns: TEXT
+  - link: TEXT
+  - short_description: TEXT
